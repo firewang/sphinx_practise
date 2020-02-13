@@ -1,4 +1,5 @@
 # Sphinx
 /build/
+/.idea/
 make.bat
 Makefile
