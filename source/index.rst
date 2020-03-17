@@ -14,8 +14,10 @@ sphinx and reStructureText handbook
    :caption: Contents:
 
    sphinx_intro
+   sphinx_conf
    reStructureText_syntax
    reference
+   pygments_intro.rst
 
 
 
