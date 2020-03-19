@@ -24,7 +24,7 @@ copyright = '2020, firewang'
 author = 'firewang'
 
 # The short X.Y version
-version = '0.1'
+version = '0.8'
 # The full version, including alpha/beta/rc tags
 release = ''
 

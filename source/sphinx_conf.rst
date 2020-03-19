@@ -327,69 +327,743 @@ gettext_uuid
 
 如果为true, 则Sphinx会在消息目录中生成用于版本跟踪的uuid信息。它用于:
 
-在.pot文件中为每个msgids添加uid行。
-
-计算新msgids和以前保存的旧msgids之间的相似性。这种计算需要很长时间。
-
-如果你想加速计算, 你可以使用 pip install python-levenshtein 来使用C编写的 python-levenshtein 第三方包。
++ 在.pot文件中为每个msgids添加uid行。
++ 计算新msgids和以前保存的旧msgids之间的相似性。(计算时间长)
+	
+如果想加速计算, 可以使用 pip install python-levenshtein 来使用C编写的 python-levenshtein 第三方包。
 
 默认是 False.
 
 gettext_location
 ,,,,,,,,,,,,,,,,,,,,
-如果为true, 则Sphinx为消息目录中的消息生成位置信息。
 
-默认是 True.
+如果为true, 则Sphinx为消息目录中的消息生成位置信息。默认 True.
 
 gettext_auto_build
 ,,,,,,,,,,,,,,,,,,,,,,
+
 如果为true, 则Sphinx为每个翻译目录文件构建mo文件。
 
 默认是 True.
 
 gettext_additional_targets
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-指定名称以启用gettext提取和转换。您可以指定以下名称:
 
-索引
-索引条款
+指定名称以启用gettext提取和转换。可以指定以下名称:
 
-Literal-block
-文字块: :: 和 code-block.
+=============== ==============
+索引:           索引条款
+Literal-block:  文字块和code-block
+Doctest-block:  doctest块
+Raw:            原始内容
+图片:           image/figure uri 和 alt
+=============== ==============
 
-Doctest-block
-doctest块
-
-Raw
-原始内容
-
-图片
-image/figure uri 和 alt
-
-例如: gettext_additional_targets = ['literal-block', 'image'] .
-
-默认是 [].
-
+例如: gettext_additional_targets = ['literal-block', 'image']
+默认是 []
 
 figure_language_filename
-语言特定数字的文件名格式。默认值为 {root}.{language}{ext} 。它将从 .. image:: dirname/filename.png 扩展为 dirname/filename.en.png 。可用的格式标记是:
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-{root} - 文件名, 包括任何路径组件, 没有文件扩展名, 例如 dirname/filename
+语言特定数字的文件名格式。默认值为 `{root}.{language}{ext}`
+它将从 `.. image:: dirname/filename.png` 扩展为 `dirname/filename.en.png` 可用的格式标记是:
 
-{path} - 文件名的目录路径组件, 如果非空, 则带有斜杠, 例如: dirname/
++ {root} - 文件名, 包括任何路径组件, 没有文件扩展名, 例如 dirname/filename
++ {path} - 文件名的目录路径组件, 如果非空, 则带有斜杠, 例如 dirname/
++ {basename} - 没有目录路径或文件扩展名组件的文件名, 例如 filename
++ {ext} - 文件扩展名, 例如 .png
++ {language} - 翻译语言, 例如 en
 
-{basename} - 没有目录路径或文件扩展名组件的文件名, 例如 filename
+例如, 将其设置为 `{path}{language}/{basename}{ext}` 将扩展为 `dirname/en/filename.png`
 
-{ext} - 文件扩展名, 例如 .png
+数学选项
+-----------------------
 
-{language} - 翻译语言, 例如 en
+================== ==========================================
+math_number_all    如果要对所有显示的数学项进行编号, 请将此选项设置为 True 。默认为 False 。
+math_eqref_format  用于格式化方程式引用标签的字符串。 {number} 占位符代表等式编号。
+                   例: 'Eq.{number}' 被渲染为, 例如, Eq.10.
+math_numfig        如果为 True , 则在页面中下显示的数学公式编号。默认为 True 。
+================== ==========================================
 
-例如, 将其设置为 {path}{language}/{basename}{ext} 将扩展为 dirname/en/filename.png。
+HTML输出选项
+------------------
 
-1.4 新版功能.
+这些选项会影响HTML以及HTML帮助输出, 以及使用Sphinx的HTMLWriter类的其他构建器。
 
-在 1.5 版更改: 添加了 {path} 和 {basename} 标记。
+html主题html_theme
+,,,,,,,,,,,,,,,,,,,,,
 
+页面主题模板，默认 alabaster 。 `内置主题信息 <https://www.sphinx.org.cn/usage/theming.html#builtin-themes>`_
+
+html_theme_options
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+所选主题外观的选项字典。
+
+html_theme_path
+,,,,,,,,,,,,,,,,,,,,,,
+
+包含自定义主题的路径列表, 可以是子目录, 也可以是zip文件。相对路径被视为相对于配置目录。
+
+html_style
+,,,,,,,,,,,,,,,,,,,
+用于HTML页面的样式表。该名称的文件必须存在于Sphinx的 static/ 路径中, 或者存在于 html_static_path 中给出的自定义路径之一。
+默认值是所选主题给出的样式表。如果您只想添加或覆盖与主题样式表相比的一些内容, 使用CSS @import 导入主题的样式表。
+
+html_title
+,,,,,,,,,,,,,,,,,
+
+使用Sphinx内置模板生成的html页面的title。默认 `<project> v<revision> documentation`
+
+html_short_title
+在HTML docs 和 HTML Help docs 使用的 html title。
+默认使用 html_title 的设置值
+
+html_baseurl
+,,,,,,,,,,,,,,,,,,,
+
+指向HTML文档根目录的URL。它用于表示文档的位置, 如 canonical_url 。
+
+html_context
+要传递到所有页面的模板引擎上下文的值字典。
+单个值也可以使用sphinx-build 的-A命令行选项来设置。
+
+html_logo
+,,,,,,,,,,,,,,
+
+文档的徽标,位于侧边栏的顶部，宽度不应超过200像素。默认值:None。
+
+如果给定, 则必须是图像文件的名称(相对于 configuration directory 的路径)。
+
+若图片文件不存在于 _static目录，将被复制到输出HTML的 _static 目录中。
+
+html_favicon
+,,,,,,,,,,,,,,,,
+
+文档的favicon，现代浏览器使用它作为标签, 窗口和书签的图标。它应该是一个Windows风格的图标文件(.ico), 大小为16x16或32x32像素。默认值: None 。
+
+如果给定, 则必须是图像文件的名称(相对于 configuration directory 的路径)。
+
+若图片文件不存在于 _static目录，将被复制到输出HTML的 _static 目录中。
+
+html_css_files
+,,,,,,,,,,,,,,,,,,
+
+CSS文件列表。该条目必须是filename字符串或包含filename 字符串和attributes字典的元组。 
+filename 必须相对于 html_static_path , 或者是一个完整的URI, 如 http://example.org/style.css 。
+attributes 用于 <link> 标签的属性。默认为空列表。
+
+::
+
+	html_css_files = ['custom.css'
+                  'https://example.com/css/custom.css',
+                  ('print.css', {'media': 'print'})]
+
+html_js_files
+,,,,,,,,,,,,,,,,,
+
+JavaScript filename 列表。该条目必须是 filename 字符串或包含 filename 字符串和 attributes 字典的元组。 
+filename 必须相对于 html_static_path , 或者是一个完整的URI, 如 http://example.org/script.js 。 
+attributes 用于 <script> 标签的属性。默认为空列表。
+
+::
+
+    html_js_files = ['script.js',
+                 'https://example.com/scripts/custom.js',
+                 ('custom.js', {'async': 'async'})]
+
+html_static_path
+,,,,,,,,,,,,,,,,,,,,,
+
+包含自定义静态文件(例如样式表css或脚本文件js)的路径列表。
+
+相对路径被视为相对于配置目录。它们被复制到主题的静态文件之后的输出的 \_static 目录中, 
+因此名为 default.css 的文件将覆盖主题的 default.css 。
+
+由于这些文件不是要构建的, 因此它们会自动从源文件中排除。
+
+html_extra_path
+,,,,,,,,,,,,,,,,,,
+
+包含与文档无直接关系的额外文件的路径列表, 例如 robots.txt 或 .htaccess 。
+
+相对路径被视为相对于配置目录。它们被复制到输出目录。它们将覆盖任何同名的现有文件。
+
+由于这些文件不是要构建的, 因此它们会自动从源文件中排除。
+
+html_last_updated_fmt
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+如果这不是None, 则使用给定的 strftime() 格式在每个页面底部插入 ‘Last updated on:’ 时间戳。空字符串相当于 '％b％d, ％Y' (或依赖于语言环境的等价物)。
+
+html_use_smartypants
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+如果为true, 则引号和短划线将转换为印刷正确的实体。默认值: True 。
+
+html_add_permalinks
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Sphinx will add “permalinks” for each heading and description environment as paragraph signs that become visible when the mouse hovers over them.
+
+This value determines the text for the permalink; it defaults to "¶". Set it to None or the empty string to disable permalinks.
+
+html_sidebars
+,,,,,,,,,,,,,,,,,,
+
+自定义侧边栏模板必须是将文档名称映射到模板名称的字典。
+
+键可以包含glob样式的模式, 所有匹配的文档都将获得指定的侧边栏。(当多个glob样式模式与任何文档匹配时会发出警告)
+
+值是列表,它指定要包括的侧边栏模板的完整列表。如果要包含所有或部分默认侧边栏, 则必须将它们放入此列表中。
+默认侧边栏(适用于与任何模式不匹配的文档)由主题本身定义。
+内置主题默认使用这些模板: ['localtoc.html', 'relations.html' , 'sourcelink.html' , 'searchbox.html']
+
+可呈现的内置侧边栏模板是:
+
++ localtoc.html - 当前文档的细粒度目录
++ globaltoc.html – 折叠整个文档集的粗粒度目录
++ relations.html – 两个指向上一个和下一个文档的链接
++ sourcelink.html – 指向当前文档源的链接(如果在 html_show_sourcelink 中启用)
++ searchbox.html – the “quick search” box
+
+::
+
+    html_sidebars = {
+   '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
+   'using/windows': ['windowssidebar.html', 'searchbox.html'],}
+   
+这将呈现自定义模板 windowssidebar.html 和给定文档侧边栏内的快速搜索框, 并呈现所有其他页面的默认侧边栏(除了本地TOC被全局TOC替换)。
+
+|  如果所选主题不具有侧边栏, 则此值仅无效, 例如内置 scrolls 和 haiku 。
+
+html_additional_pages
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+为HTML页面指定其他模板，为文档名称映射到模板名称的字典。
+
+::
+
+  html_additional_pages = {
+    'download': 'customdownload.html',}
+	
+这将把模板 customdownload.html 渲染为页面 download.html 。
+
+html_domain_indices
+,,,,,,,,,,,,,,,,,,,,,,,
+
+如果为true, 则除了常规索引外, 还会生成特定于域的索引。对于例如Python域, 这是全局模块索引。默认为 True 。
+
+此值可以是bool或应生成的索引名称列表。要查找特定索引的索引名称, 请查看HTML文件名。
+例如, Python模块索引的名称为 'py-modindex' 。
+
+html_use_index
+,,,,,,,,,,,,,,,,,,
+
+默认为True,为HTML文档添加索引。
+
+html_split_index
+,,,,,,,,,,,,,,,,,,,,
+
+默认False，如果为true, 则索引生成两次:一次作为包含所有条目的单个页面, 一次作为每个起始字母的一个页面。
+
+html_copy_source
+,,,,,,,,,,,,,,,,,,,,,,
+
+默认为true, reST源包含在HTML构建中 \_sources/name
+
+html_show_sourcelink
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+默认为true(并且 html_copy_source 也为 true ), 则指向reST源的链接将添加到侧栏。
+
+html_sourcelink_suffix
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+附加到源链接的后缀(参见html_show_sourcelink), 除非它们已经有这个后缀。默认是 '.txt' 。
+
+html_use_opensearch
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+If nonempty, an OpenSearch description file will be output, and all pages will contain a <link> tag referring to it. 
+Since OpenSearch doesn’t support relative URLs for its search page location, 
+the value of this option must be the base URL from which these documents are served (without trailing slash), e.g. "https://docs.python.org". The default is ''.
+
+html_file_suffix
+,,,,,,,,,,,,,,,,,,,,,
+
+生成的HTML文件后缀，默认为 ".html"
+
+html_link_suffix
+,,,,,,,,,,,,,,,,,,,,,
+
+生成HTML文件链接的后缀。默认值为 html_file_suffix 设置值;它可以设置不同(例如, 支持不同的Web服务器设置)。
+
+html_show_copyright
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+在HTML Footer显示 “(C) Copyright …”, 默认True
+
+html_show_sphinx
+,,,,,,,,,,,,,,,,,,,,
+
+在HTML Footer显示 “Created using Sphinx” ,"Built with Sphinx"，默认True
+
+html_output_encoding
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+HTML输出文件的编码。默认为 'utf-8' 
+
+html_compact_lists
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+默认为True, 如列表中包含单个段落和/或子列表的所有项目等等…(递归定义)，将不会对其任何项目使用 <p> 元素。
+这是标准的docutils行为。
+
+html_secnumber_suffix
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+章节编号的后缀(最后一个，与章节标题相连的部分)，默认是". ", 比如 "2.1.1. 章节标题"，可设置为" "(空格)。
+
+html_search_language
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+全文检索使用的语言，默认为en
+
+支持这些语言:
+
++ da – 丹麦语
++ nl – 荷兰语
++ en – 英语
++ fi – 芬兰语
++ fr – 法语
++ de – 德语
++ hu – 匈牙利语
++ it – 意大利语
++ ja – 日语
++ no – 挪威语
++ pt – 葡萄牙语
++ ro – 罗马尼亚语
++ ru – 俄语
++ es – 西班牙语
++ sv – 瑞典语
++ tr – 土耳其语
++ zh – 中文
+
+每种语言(日语除外)都提供自己的词干算法。 Sphinx默认使用Python实现。您可以使用C实现来加速构建索引文件。
+`PorterStemmer <https://pypi.org/project/PorterStemmer/>`_ (en)，
+`PyStemmer <https://pypi.org/project/PyStemmer/>`_ (所有语言)
+
+
+html_search_options
+,,,,,,,,,,,,,,,,,,,,,,,
+
+带有搜索语言支持选项的字典, 默认为空。这些选项的含义取决于所选语言。
+
+英语支持没有选择。
+
+日本的支持有这些选择:
+
+Type: type 是点模块路径字符串, 用于指定应该从哪实现 sphinx.search.ja.BaseSplitter。
+如果未指定或指定None, 将使用 'sphinx.search.ja.DefaultSplitter' 。
+
+可以从以下模块中进行选择:
+
++ ‘sphinx.search.ja.DefaultSplitter’: TinySegmenter algorithm. 这是默认分割器。
++ ‘sphinx.search.ja.MecabSplitter’: MeCab绑定。要使用这个拆分器, 需要 ‘mecab’ python绑定或动态链接库( ‘libmecab.so’ 用于linux, ‘libmecab.dll’ 用于windows)。
++ ‘sphinx.search.ja.JanomeSplitter’: Janome绑定。要使用这个分离器, 需要 Janome 。
+
+1.6 版后已移除: 'mecab', 'janome' and 'default' 已弃用. 为了保持兼容性, 'mecab', 'janome' and 'default' 也可以接受。
+
+其他选项值取决于您选择的拆分器值。
+
+'mecab' 的选项:
++ dic_enc: MeCab算法的编码。
++ dict: 用于MeCab算法的字典。
++ lib: 用于在未安装Python绑定的情况下通过ctypes查找MeCab库的库名。
+
+::
+
+    html_search_options = {
+    'type': 'mecab',
+    'dic_enc': 'utf-8',
+    'dict': '/path/to/mecab.dic',
+    'lib': '/path/to/libmecab.so',}
+	
+'janome' 的选项:
+
++ user_dic : Janome的用户词典文件路径。
++ user_dic_enc : user_dic选项指定的用户词典文件的编码。默认为 `utf8` 
+
+
+中文的支持有这些选择:
+dict – 如果想使用自定义词典, jieba 字典路径。
+
+html_search_scorer
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+实现搜索结果记分器的JavaScript文件的名称(相对于配置目录)。如果为空, 则使用默认值。
+
+html_scaled_image_link
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+默认为True，图像本身会链接到原始图像(如果它没有target选项或缩放相关选项: `scale` , `width` , `height`
+
+html_math_renderer
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+HTML输出的math_renderer扩展名。默认为 ``mathjax`` 。
+
+singlehtml_sidebars
+,,,,,,,,,,,,,,,,,,,,,
+
+单个HTML页面输出选项，自定义侧边栏模板必须是将文档名称映射到模板名称的字典。它只允许一个名为 "index" 的键。
+所有其他键都被忽略。默认情况下，与 html_sidebars 相同。
+
+htmlhelp_basename
+,,,,,,,,,,,,,,,,,,,,,
+
+HTML帮助构建器的输出文件基名。默认是 ``pydoc``
+
+htmlhelp_file_suffix
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+HTML帮助文档文件名后缀，默认 ``.html``
+
+htmlhelp_link_suffix
+,,,,,,,,,,,,,,,,,,,,,,,,,
+
+HTML帮助文档链接后缀，默认 `.html`
+
+EPUB输出配置项
+----------------
+
+`EPUB输出配置项 <https://www.sphinx.org.cn/usage/configuration.html#options-for-epub-output>`_
+
+LaTeX输出配置项
+-------------------
+
+`LaTeX输出配置项 <https://www.sphinx.org.cn/usage/configuration.html#options-for-latex-output>`_
+
+文本输出选项
+------------------
+
+text_newlines
+,,,,,,,,,,,,,,,,,,
+
+确定在文本输出中使用哪个行尾字符。
+
++ 'unix': 使用Unix风格的行结尾(``\n``)
++ 'windows': 使用Windows风格的行结尾(``\r\n``)
++ 'native': 使用构建文档的平台的行结束样式
+
+默认值: 'unix' 。
+
+text_sectionchars
+,,,,,,,,,,,,,,,,,,,,,,,
+
+一个7个字符的字符串, 应该用于下划线部分。第一个字符用于第一级标题, 第二个字符用于第二级标题, 依此类推。
+
+默认为 ``*=-~"+```
+
+text_add_secnumbers
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+一个布尔值, 用于决定文本输出中是否包含节号。默认为 True 。
+
+text_secnumber_suffix
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+章节编号的后缀(最后一个，与章节标题相连的部分)，默认是 ". " ,比如 ``2.1.1. 章节标题`` ,可设置为 " "(空格)。
+
+
+HTML主题
+---------------
+
+Sphinx支持通过 themes 更改其HTML输出的外观。
+
+主题是HTML模板, 样式表和其他静态文件的集合。此外, 它还有一个配置文件, 用于指定要继承的主题, 要使用的突出显示样式以及用于自定义主题外观的选项。
+
+也可以自己 `制作主题 <https://www.sphinx.org.cn/theming.html>`_
+
+使用（配置）主题
+,,,,,,,,,,,,,,,,,,,,,
+
+使用内置主题
+................
+
+设置 ``conf.py`` 中 ``html_theme`` 的值即可
+
+::
+
+   html_theme = 'classic'
+
+修改主题的一些配置选项，修改 ``html_theme_options`` 配置项，
+对于使用的主题适用于哪些修改，视具体主题而定。
+
+::
+
+   html_theme_options = {
+    "rightsidebar": "true",
+    "relbarbgcolor": "black"}
+
+使用自定义主题
+......................
+
+自定义主题可以是静态文件形式或Python包。 
+对于静态表单, 支持目录(包含 theme.conf 和其他所需文件)或具有相同内容的zip文件。
+有配置值 html_theme_path，路径为相对conf.py所在目录的**相对路径** ,
+
+例如, 如果文件中有一个主题 blue.zip, 则可以将其放在包含 conf.py 的目录中并使用此配置
+
+::
+
+   html_theme = "blue"
+   html_theme_path = ["."]
+
+python包主题
+....................
+
+使用 pip 安装主题包之后，和上一小节一样的流程配置即可。
+
+::
+
+   pip install sphinxjp.themes.dotted
+
+内置主题
+,,,,,,,,,,,,,,,,,,
+
+.. figure:: ./_static/buildinthemes/alabaster.png
+   :alt: alabaster
+   
+   alabaster
+
+.. figure:: ./_static/buildinthemes/agogo.png
+   :alt: agogo
+   
+   agogo
+   
+.. figure:: ./_static/buildinthemes/bizstyle.png
+   :alt: bizstyle
+   
+   bizstyle
+   
+.. figure:: ./_static/buildinthemes/classic.png
+   :alt: classic
+   
+   classic
+   
+.. figure:: ./_static/buildinthemes/haiku.png
+   :alt: haiku
+   
+   haiku
+   
+.. figure:: ./_static/buildinthemes/nature.png
+   :alt: nature
+   
+   nature
+   
+.. figure:: ./_static/buildinthemes/pyramid.png
+   :alt: pyramid
+   
+   pyramid
+   
+.. figure:: ./_static/buildinthemes/sphinxdoc.png
+   :alt: sphinxdoc
+   
+   sphinxdoc
+   
+.. figure:: ./_static/buildinthemes/scrolls.png
+   :alt: scrolls
+   
+   scrolls
+   
+.. figure:: ./_static/buildinthemes/traditional.png
+   :alt: traditional
+   
+   traditional
+
+basic
+...........
+
+基本上没有样式的布局, 用作其他主题的基础, 也可用作自定义主题的基础
+
++ nosidebar (true or false): 不包括侧边栏. 默认为 False .
++ sidebarwidth (int或str): 侧边栏的宽度(以像素为单位). 这可以是 int, 它被解释为像素或有效的CSS维度字符串, 例如 ‘70em’ 或 ‘50％’. 默认为230像素.
++ body_min_width (int或str):文档正文的最小宽度. 这可以是int, 它被解释为像素或有效的CSS维度字符串, 例如’70em’或’50％’. 如果您不想要宽度限制, 请使用0. 默认值可能取决于主题(通常为450px).
++ body_max_width (int或str):文档正文的最大宽度. 这可以是int, 它被解释为像素或有效的CSS维度字符串, 例如’70em’或’50％’. 如果您不想要宽度限制, 请使用 none . 默认值可能取决于主题(通常为800px).
+
+alabaster
+...............
+
+来自@kennethreitz的修改后的 Kr Sphinx主题(Requests项目中使用), 它本身最初基于@mitsuhiko用于Flask及相关项目的主题。
+`配置信息 <https://alabaster.readthedocs.io/en/latest/installation.html>`_
+
+classic
+................
+
+经典主题
+
++ rightsidebar (true or false):将侧边栏放在右侧。默认为 False
++ stickysidebar (true or false):使侧边栏固定。默认为False
++ collapsiblesidebar (true or false):添加一个实验性 JavaScript代码段, 通过侧面的按钮使侧边栏可折叠。默认为False
++ externalrefs (true或false):显示外部链接与内部链接不同。默认为 False
+
+还有各种颜色和字体选项可以更改颜色方案, 而无需编写自定义样式表:
+
++ footerbgcolor (CSS颜色):页脚行的背景颜色.
++ footertextcolor (CSS颜色):页脚行的文本颜色.
++ sidebarbgcolor (CSS颜色):侧边栏的背景颜色.
++ sidebarbtncolor （CSS颜色:侧边栏折叠按钮的背景颜色（当 collapsiblesidebar 为 True 时使用）。
++ sidebartextcolor (CSS颜色):侧边栏的文本颜色.
++ sidebarlinkcolor (CSS颜色):侧边栏的链接颜色.
++ relbarbgcolor (CSS颜色):关系栏的背景颜色.
++ relbartextcolor (CSS颜色): 关系栏的文本颜色.
++ relbarlinkcolor (CSS颜色):关系栏的链接颜色.
++ bgcolor (CSS颜色):身体背景颜色.
++ textcolor (CSS颜色):正文文本颜色.
++ linkcolor (CSS颜色):正文链接颜色.
++ visitedlinkcolor (CSS颜色):访问过的链接的正文颜色.
++ headbgcolor (CSS颜色):标题的背景颜色.
++ headtextcolor (CSS颜色):标题的文本颜色.
++ headlinkcolor (CSS颜色):标题的链接颜色.
++ codebgcolor (CSS颜色):代码块的背景颜色.
++ codetextcolor (CSS颜色): 代码块的默认文本颜色，如果没有通过突出显示样式设置不同.
++ bodyfont (CSS字体系列):普通文本的字体.
++ headfont (CSS字体系列):标题的字体.
+
+sphinxdoc
+..........
+
+可配置nosidebar, sidebarwidth
+
+scrolls
+........
+
+一个更轻量级的主题, 基于 `Jinja <http://jinja.pocoo.org/>`_ 文档。有以下颜色选项:
+
++ headerbordercolor
++ subheadlinecolor
++ linkcolor
++ visitedlinkcolor
++ admonitioncolor
+
+agogo
+.......
+
++ bodyfont (CSS字体系列):普通文本的字体.
++ headerfont (CSS字体系列):标题字体.
++ pagewidth (CSS长度):页面内容的宽度, 默认为70em.
++ documentwidth (CSS长度):文档的宽度(没有侧边栏), 默认为50em.
++ sidebarwidth (CSS长度):侧边栏的宽度, 默认为20em.
++ bgcolor (CSS color): 背景颜色.
++ headerbg (“background” 的CSS值):标题区域的背景, 默认为浅灰色渐变.
++ footerbg (“background” 的CSS值):页脚区域的背景, 默认为浅灰色渐变.
++ linkcolor (CSS颜色):正文链接颜色.
++ headercolor1, headercolor2 (CSS颜色):<h1>和<h2>标题的颜色.
++ headerlinkcolor (CSS颜色):标题中后向引用链接的颜色.
++ textalign (CSS text-align 值):正文的文本对齐方式, 默认为 justify.
+
+nature
+........
+
+一个绿色的主题。可配置nosidebar, sidebarwidth
+
+pyramid
+........
+
+由Blaise Laflamme设计的金字塔网络框架项目的主题。
+
+可配置nosidebar, sidebarwidth
+
+haiku
+.......
+
+没有侧栏的主题
+
++ full_logo (true 或 false, 默认为 False):如果True, 标题只会显示 html_logo. 用于大型徽标。 如果为False, 则徽标(如果存在)将浮动右侧显示, 文档标题将放在标题中.
++ textcolor, headingcolor, linkcolor, visitedlinkcolor, hoverlinkcolor (CSS颜色):各种身体元素的颜色.
+
+traditional
+............
+
+一个类似于旧Python文档的主题。可配置nosidebar, sidebarwidth
+
+epub
+.....
+
+epub构建器的主题。 这个主题试图保留视觉空间, 这是电子书阅读器上的稀疏资源。
+
++ relbar1 (true 或 false, 默认为 True): 如果为true, 则将 relbar1 块插入epub输出中
++ footer (true 或 false, 默认为 True):如果为true, 则在脚本输出中插入 footer 块
+
+bizstyle
+.........
+一个简单的蓝色主题。 可配置nosidebar, sidebarwidth, rightsidebar
+
+   
+第三方主题
+,,,,,,,,,,,,,,,,,,,   
+
+有许多第三方主题可用。其中一些是一般用途, 而另一些则是针对单个项目的。
+
+可在 `PyPI <https://pypi.org/search/?q=&o=&c=Framework+%3A%3A+Sphinx+%3A%3A+Theme>`_ , 
+`GitHub <https://github.com/search?utf8=%E2%9C%93&q=sphinx+theme&type=>`_ 
+和 `sphinx-themes.org <https://sphinx-themes.org/>`_ 上可以找到更多第三方主题。
+
+sphinx_rtd_theme
+.........................
+
+`Read the Docs Sphinx Theme <https://pypi.org/project/sphinx_rtd_theme/>`_. 
+
+这是一个针对readthedocs.org制作的适合移动设备的sphinx主题. 
+
+
+Markdown支持
+-----------------
+
+为了支持基于Markdown的文档，Sphinx使用 `recommonmark <https://recommonmark.readthedocs.io/en/latest/index.html>`_ 。
+
+recommonmark是一个Docutils桥接器，是用于解析 `CommonMark <https://commonmark.org/>`_ Markdown风格的Python包。
+
+1. 安装Markdown解析器 recommonmark
+
+::
+
+	pip install --upgrade recommonmark
+
+2. 将 recommonmark 添加到扩展名列表
+
+::
+
+    extensions = ['recommonmark']
+	
+3. 调整source_suffix变量。
+
+下面的示例配置Sphinx将所有扩展名为 .md 和 .txt 的文件解析为 Markdown
+
+::
+
+	source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',}
+
+4. 进一步配置 recommonmark 以允许标准 CommonMark 不支持的自定义语法
+
+详阅 `recommonmark documentation <https://recommonmark.readthedocs.io/en/latest/auto_structify.html>`_
+	
+HTML模板
+---------
+
+sphinx扩展ext
+--------------
+
+内置扩展
+,,,,,,,,,
+
+外部扩展
+,,,,,,,,,
 
 配置文件示例
 -----------------

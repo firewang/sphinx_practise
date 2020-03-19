@@ -17,6 +17,8 @@ sphinx
 
 https://www.sphinx.org.cn/
 
+https://www.sphinx-doc.org/en/master/
+
 https://zh-sphinx-doc.readthedocs.io/en/latest/
 
 reStructureText
