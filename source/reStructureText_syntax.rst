@@ -900,12 +900,260 @@ Implicit Hyperlink Targets
 
 
 扩展指令 Directives
----------------------------
-Directives are a general-purpose extension mechanism, a way of adding support for new constructs without adding new syntax. For a description of all standard directives, see reStructuredText Directives.
-https://docutils.sourceforge.io/docs/ref/rst/directives.html
+--------------------
+
+指令（Directives）是reStructureText的扩展机制。
+可以在不增加新语法的情况下，增加新的结构性支持(a way of adding support for new constructs)。
+
+指令由三部分组成
+
+::
+
+	.. directive-type:: directive-block
+
+其中指令类型（directive-type）指明指令的类型，指令内容体又由三部分组成
+
++ 指令作用对象Directive arguments：指明该指令针对哪个对象作用
++ 指令选项参数Directive options：该指令的可选参数（可选），是一个参数列表
++ 指令内容说明Directive content：说明文档（可选）
+
+比如插入一个图片
+
+::
+
+	.. figure:: 图片名.png  # 这里是指令作用对象
+	   :scale: 50     # 这里是指令参数
+ 	   :width: 100
+
+	   这是一个图片   # 这里是说明
+
+已在 `reference reStructuredText parser <https://docutils.sourceforge.io/docs/ref/rst/directives.html>`_ 中实现的指令。
+
+警告信息Admonitions
+,,,,,,,,,,,,,,,,,,,,
+
+特定的警告信息
+...............
+
+格式为
+
+::
+
+   .. admonition:: admonition-title(可空)
+      :class: class-name(可选)
+	  :name: name(可选)
+      admonition-content说明信息
+
+admonition-title和admonition-content显示效果是一体的，
+但是admonition-title(可空)会在html中单独存在一个title标签中。
+	  
+支持如下特定警告信息
+
++ attention
++ caution
++ danger
++ error
++ hint
++ important
++ note
++ tip
++ warning
+
+**示例如下：**
+
+::
+
+   .. attention:: This is a attention admonition.
+      second attention paragraph.
+      
+   .. caution:: This is a caution admonition.
+      second caution paragraph.
+   
+   .. danger:: This is a danger admonition.
+      second danger paragraph.
+   
+   .. error:: This is a error admonition.
+      second error paragraph.
+   
+   .. hint:: This is a hint admonition.
+      second hint paragraph.
+   
+   .. important:: This is a important admonition.
+      second important paragraph.   
+      
+   .. note:: This is a note admonition.
+      This is the second line of the first paragraph.
+   
+      - The note contains all indented body elements
+        following.
+      - It includes this bullet list.
+   
+   .. tip:: This is a tip admonition.
+      second tip paragraph.
+   
+   .. warning:: This is a warning admonition.
+      second warning paragraph.
+   
+
+
+**效果如下：**
+
+.. attention:: This is a attention admonition.
+   second attention paragraph.
+
+.. caution:: This is a caution admonition.
+   second caution paragraph.
+
+.. danger:: This is a danger admonition.
+   second danger paragraph.
+
+.. error:: This is a error admonition.
+   second error paragraph.
+
+.. hint:: This is a hint admonition.
+   second hint paragraph.
+
+.. important:: This is a important admonition.
+   second important paragraph.   
+   
+.. note:: This is a note admonition.
+   This is the second line of the first paragraph.
+
+   - The note contains all indented body elements
+     following.
+   - It includes this bullet list.
+
+.. tip:: This is a tip admonition.
+   second tip paragraph.
+
+.. warning:: This is a warning admonition.
+   second warning paragraph.
+
+通用警告信息Generic Admonition
+...............................
+
+通用警告信息即不指定为特定的警告类别，使用admonition指代警告。
+与特定警告不同的是，特定警告的admonition-title在通用警告中为admonition-name，
+这是我们自定义的警告名，用于和特定警告（danger,hint,important等）提供同等标识。
+
+**示例如下：**
+
+::
+
+   .. admonition:: And, by the way...
+   
+      You can make up your own admonition too.
+
+**结果如下：**
+	  
+.. admonition:: And, by the way...
+
+   You can make up your own admonition too.
+
+   
+图片Images
+,,,,,,,,,,,
+
+使用image
+
+::
+
+   .. image:: picture.jpeg
+      :class: class-name
+	  :name: name 
+      :height: 100 px(长度)
+      :width: 200 px (长度或者百分比)
+      :scale: 50 % (百分比，百分号可省略)
+      :alt: alternate text
+      :align: right
+	  :target: https://www.baidu.com
+
+align可选top,middle,bottom,left,center,right
+
+target使得图片可点击跳转。
+
+scale表示等比例伸缩（放大或者缩小）
+
+.. important:: scale需要和width或者height（或者2者）一起使用。
+
+使用figure
+
+::
+
+   .. figure:: picture.png
+      :figwidth: 200 px (长度或者百分比)
+      :scale: 50 %
+	  :align: center
+	  :figclass: figure-class
+      :alt: map to buried treasure
+   
+       +---------------------------+
+       |        figure             |
+       |                           |
+       |<------ figwidth --------->|
+       |                           |
+       |  +---------------------+  |
+       |  |     image           |  |
+       |  |                     |  |
+       |  |<--- width --------->|  |
+       |  +---------------------+  |
+       |                           |
+       |The figure's caption should|
+       |wrap at this width.        |
+       +---------------------------+
+
+figure相当于一个画布（类似于html中的一个div或者一个canvas），
+它对处于其内的内容进行样式统一管理。相比image可以包含除图片外的更多内容。
+
+figure支持image的所有指令选项参数，除了align在figure中指示整个画布的对齐方式。
+且它只能选择为left,center,right。
+
+.. important:: 和image一致，要使得scale（这里是对整个画布作用）起作用需要和figwidth一起使用  
+
+页面元素Body Elements
+,,,,,,,,,,,,,,,,,,,,,,
+
+表格Tables
+,,,,,,,,,,,
+
+文档Documents
+,,,,,,,,,,,,,,
+
+References
+,,,,,,,,,,,,
+
+HTML-Specific
+,,,,,,,,,,,,,,
+
+Substitution Definitions
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+其他
+,,,,,,
+
+
+通用指令选项参数
+,,,,,,,,,,,,,,,,,
+
+============ =====================================
+\:class\:    得到
+\:name\:     为指令设置名称(可用于简化别名链接)
+============ =====================================
+
+::
+  
+   .. image:: build.png
+      :name: my pic
+   与下列方式等价
+   .. _my pic
+   
+   .. image:: build.png
+   
+
 
 Substitution References and Definitions
-------------------------------------------
+----------------------------------------
+
 Comments
------------------
+---------
 非上述语法，则都作为Comments处理。
